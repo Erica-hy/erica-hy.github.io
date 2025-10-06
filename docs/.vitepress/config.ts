@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: '小羊的博客',
   description: '零星的优秀，也能拼凑成山河',
-  base: '/erica.github.io/',
+  base: '/',
   themeConfig: {
     // 顶部导航精简，仅保留关键入口
     nav: [
