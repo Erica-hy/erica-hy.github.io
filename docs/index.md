@@ -10,7 +10,7 @@ lastUpdated: false
   <div class="hero-content">
     <h1>小羊的博客</h1>
     <p>零星的优秀，也能拼凑成山河</p>
-    <a class="hero-btn" href="guide/start">开始阅读</a>
+    <a class="hero-btn" href="vue/vue3-响应式原理示例">开始阅读</a>
   </div>
 </section>
 
@@ -24,7 +24,7 @@ lastUpdated: false
   height: 100svh;
   display: grid;
   place-items: center;
-  background-image: url('hero.png'); /* 将图片放在 docs/public/hero.png */
+  background-image: url('1.jpg'); /* 将图片放在 docs/public/hero.png */
   background-size: cover;
   background-position: center;
   overflow: hidden;
