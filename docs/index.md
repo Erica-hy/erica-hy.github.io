@@ -10,12 +10,12 @@ lastUpdated: false
   <div class="hero-content">
     <h1>小羊的博客</h1>
     <p>零星的优秀，也能拼凑成山河</p>
-    <a class="hero-btn" href="/guide/start">开始阅读</a>
+    <a class="hero-btn" href="guide/start">开始阅读</a>
   </div>
 </section>
 
 <style>
-html, body { height: 100%; overflow: hidden; }
+
 /* 让内容突破文档容器，铺满全宽 */
 .full-hero {
   position: fixed;
