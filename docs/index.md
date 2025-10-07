@@ -6,11 +6,15 @@ outline: false
 lastUpdated: false
 ---
 
-<section class="full-hero" role="img" aria-label="站点主视觉">
+<script setup>
+import { withBase } from 'vitepress'
+</script>
+
+<section class="full-hero" role="img" aria-label="站点主视觉" :style="{ backgroundImage: `url(${withBase('/1.jpg')})` }">
   <div class="hero-content">
     <h1>小羊的博客</h1>
     <p>零星的优秀，也能拼凑成山河</p>
-    <a class="hero-btn" href="/vue/vue3-响应式原理示例">开始阅读</a>
+    <a class="hero-btn" :href="withBase('/vue/vue3-响应式原理示例')">开始阅读</a>
   </div>
 </section>
 
@@ -24,7 +28,7 @@ lastUpdated: false
   height: 100svh;
   display: grid;
   place-items: center;
-  background-image: url('/1.jpg'); /* 将图片放在 docs/public/hero.png */
+  /* 背景图由 :style 和 withBase 提供，确保在 GitHub Pages 下正确前缀 */
   background-size: cover;
   background-position: center;
   overflow: hidden;
