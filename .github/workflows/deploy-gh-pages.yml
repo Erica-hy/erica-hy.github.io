@@ -1,0 +1,58 @@
+name: Deploy VitePress via gh-pages branch
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies (best-effort)
+        shell: bash
+        run: |
+          set -eux
+          corepack enable
+          if [ -f pnpm-lock.yaml ]; then
+            corepack prepare pnpm@latest --activate
+            pnpm i --frozen-lockfile || pnpm i
+          elif [ -f yarn.lock ]; then
+            corepack prepare yarn@stable --activate
+            yarn --frozen-lockfile || yarn
+          elif [ -f package.json ]; then
+            npm ci || npm i
+          else
+            echo "No package.json found, proceeding to npx vitepress"
+          fi
+
+      - name: Build VitePress site
+        run: npx vitepress build docs
+
+      - name: Verify index.html exists
+        run: |
+          ls -la docs/.vitepress/dist || true
+          if [ ! -f docs/.vitepress/dist/index.html ]; then
+            echo "ERROR: docs/.vitepress/dist/index.html not found. Build produced no output."
+            exit 1
+          fi
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/.vitepress/dist
+          publish_branch: gh-pages
+          force_orphan: true
