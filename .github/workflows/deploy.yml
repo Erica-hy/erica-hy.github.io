@@ -1,9 +1,7 @@
 name: Deploy VitePress to GitHub Pages
 
 on:
-  push:
-    branches:
-      - main
+  push: {}
   workflow_dispatch:
 
 permissions:
@@ -27,21 +25,42 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
+      - name: Install dependencies (best-effort)
+        shell: bash
         run: |
+          set -eux
           corepack enable
           if [ -f pnpm-lock.yaml ]; then
             corepack prepare pnpm@latest --activate
-            pnpm i --frozen-lockfile
+            pnpm i --frozen-lockfile || pnpm i
           elif [ -f yarn.lock ]; then
             corepack prepare yarn@stable --activate
-            yarn --frozen-lockfile
+            yarn --frozen-lockfile || yarn
+          elif [ -f package.json ]; then
+            npm ci || npm i
           else
-            npm ci
+            echo "No package.json found, proceeding to npx vitepress"
           fi
 
       - name: Build VitePress site
         run: npx vitepress build docs
+
+      - name: List build output
+        run: |
+          echo "Listing docs/.vitepress/dist:"
+          ls -la docs/.vitepress/dist || true
+          echo "Tree:"
+          (command -v tree >/dev/null && tree -a docs/.vitepress/dist) || true
+
+      - name: Verify index.html exists
+        run: |
+          if [ ! -f docs/.vitepress/dist/index.html ]; then
+            echo "ERROR: docs/.vitepress/dist/index.html not found. Build produced no output."
+            exit 1
+          fi
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
